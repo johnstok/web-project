@@ -12,7 +12,7 @@
     <properties>
         <!-- Library versions - should be 'lib.version.{artifactId}' -->
         <lib.version.gson>2.2.2</lib.version.gson>
-        <lib.version.slf4j>1.7.5</lib.version.slf4j>
+        <lib.version.slf4j>1.7.10</lib.version.slf4j>
         <lib.version.handlebars>2.0.0</lib.version.handlebars>
         <lib.version.postgresql>8.4-702.jdbc3</lib.version.postgresql>
         
@@ -93,11 +93,7 @@
         	<artifactId>log4j-over-slf4j</artifactId>
         	<version>${lib.version.slf4j}</version>
         </dependency>
-        <dependency>
-        	<groupId>org.slf4j</groupId>
-        	<artifactId>slf4j-simple</artifactId>
-        	<version>${lib.version.slf4j}</version>
-        </dependency>
+        <!-- An SLF4J implementation should be added in the child POM. -->
 
         <!-- MVP. -->
         <dependency>
@@ -107,11 +103,6 @@
         </dependency>
 
         <!-- REST. -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
-            <version>3.5.0</version>
-        </dependency>
 
         <!-- Security. -->
         <dependency>
@@ -122,7 +113,7 @@
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
             <artifactId>owasp-java-html-sanitizer</artifactId>
-            <version>r156</version>
+            <version>r239</version>
         </dependency>
 
         <!-- Transactional email. -->
@@ -133,6 +124,11 @@
         </dependency>
 
         <!-- Persistence -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>3.5.0</version>
+        </dependency>
         <dependency>
             <groupId>com.johnstok</groupId>
             <artifactId>repository</artifactId>
