@@ -14,19 +14,25 @@
         <lib.version.gson>2.2.2</lib.version.gson>
         <lib.version.slf4j>1.7.10</lib.version.slf4j>
         <lib.version.handlebars>2.0.0</lib.version.handlebars>
-        <lib.version.postgresql>8.4-702.jdbc3</lib.version.postgresql>
+        <lib.version.postgresql>9.4-1206-jdbc42</lib.version.postgresql>
         <lib.version.gson>2.2.2</lib.version.gson>
         <lib.version.h2>1.3.155</lib.version.h2>
-        <lib.version.flyway>1.4.1</lib.version.flyway>
-        <lib.version.bootstrap>2.2.2</lib.version.bootstrap>
+        <lib.version.flyway>3.2.1</lib.version.flyway>
+        <lib.version.bootstrap>3.3.5</lib.version.bootstrap>
         <lib.version.hysterix>1.4.24</lib.version.hysterix>
         <lib.version.servlet-api>2.5</lib.version.servlet-api>
+        <lib.version.jooq>3.6.1</lib.version.jooq>
+        <lib.version.scribe>1.3.6</lib.version.scribe>
+        <lib.version.json>20090211</lib.version.json>
         
         <!-- Plug-in versions - should be 'plugin.version.{artifactId}' -->
         <plugin.version.heroku>1.0.0</plugin.version.heroku>
         
         <!-- Project configuration.
-        <project.heroku.appName>?</project.heroku.appName>
+        <project.heroku.appName>zkz</project.heroku.appName>
+        <project.db.url>jdbc:postgresql://localhost:5432/library</project.db.url>
+        <project.db.user>keith</project.db.user>
+        <project.db.password></project.db.password>
          -->
     </properties>
 
@@ -54,7 +60,7 @@
         <dependency><!-- Browser compatibility -->
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.9.0</version>
+            <version>2.1.4</version>
         </dependency>
         <dependency><!-- Browser feature detection -->
             <groupId>org.webjars</groupId>
@@ -64,17 +70,22 @@
         <dependency><!-- Dependency Mgmt -->
             <groupId>org.webjars</groupId>
             <artifactId>requirejs</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.18</version>
         </dependency>
-        <dependency>
+        <dependency><!-- TODO: what is this? -->
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
-            <version>4.2.0</version>
+            <version>4.3.0</version>
         </dependency>
-        <dependency>
+        <dependency><!-- FIXME: is this still required? -->
             <groupId>org.webjars</groupId>
             <artifactId>normalize.css</artifactId>
             <version>3.0.1</version>
+        </dependency>
+        <dependency><!-- TODO: what is this? -->
+            <groupId>org.webjars</groupId>
+            <artifactId>colors</artifactId>
+            <version>0.2.0</version>
         </dependency>
 
         <!-- Representation -->
@@ -83,10 +94,20 @@
           <artifactId>gson</artifactId>
           <version>${lib.version.gson}</version>
         </dependency>
+        <dependency><!-- FIXME: duplicate JSON lib's. -->
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${lib.version.json}</version>
+        </dependency>
         <dependency>
            <groupId>org.pegdown</groupId>
            <artifactId>pegdown</artifactId>
            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>0.7.4</version>
         </dependency>
        
         <!-- Templating -->
@@ -125,11 +146,12 @@
 		    <artifactId>hystrix-core</artifactId>
 		    <version>${lib.version.hysterix}</version>
 		</dependency>
+        
         <!-- Security -->
         <dependency>
             <groupId>org.scribe</groupId>
             <artifactId>scribe</artifactId>
-            <version>1.3.6</version>
+            <version>${lib.version.scribe}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
@@ -143,12 +165,29 @@
             <artifactId>mail-javamail</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        
+        <!-- Validation -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.1.3.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>2.2.4</version>
+        </dependency>
 
         <!-- Persistence -->
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-            <version>3.5.0</version>
+            <version>${lib.version.jooq}</version>
         </dependency>
         <dependency>
             <groupId>com.johnstok</groupId>
@@ -156,15 +195,20 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${lib.version.postgresql}</version>
         </dependency>
         <dependency>
-           <groupId>com.googlecode.flyway</groupId>
+           <groupId>org.flywaydb</groupId>
            <artifactId>flyway-core</artifactId>
            <version>${lib.version.flyway}</version>
        </dependency>
+       <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.3.8</version>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
@@ -177,6 +221,20 @@
 
     <build>
         <plugins>
+            <plugin>
+                <!-- 
+                    TODO: document use of this plugin
+                -->
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${lib.version.flyway}</version>
+                <configuration>
+                    <user>${project.db.user}</user>
+                    <password>${project.db.password}</password>
+                    <url>${project.db.url}</url>
+                    <driver>org.postgresql.Driver</driver>
+                </configuration>
+            </plugin>
         	<plugin>
         		<!-- 
         			TODO: document use of this plugin based on https://devcenter.heroku.com/articles/deploying-java-applications-with-the-heroku-maven-plugin
@@ -198,6 +256,33 @@
 					</configVars>
 				</configuration>
 		      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>test-mocha</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <tasks name="Run Mocha tests">
+                                <exec dir="${basedir}" executable="mocha" failonerror="true">
+                                </exec>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <!--execution> <id>test-web-performance</id> <phase>test</phase> 
+                        <configuration> <tasks name="Run YSlow tests"> <exec dir="${basedir}" executable="phantomjs" 
+                        failonerror="true"> <arg line="yslow.js -i basic -f plain http://localhost:5000/wiki"/> 
+                        </exec> </tasks> </configuration> <goals> <goal>run</goal> </goals> </execution -->
+                    <!--execution> <id>test-web-accessibility</id> <phase>test</phase> 
+                        <configuration> <tasks name="Run Pa11y tests"> <exec dir="${basedir}" executable="pa11y" 
+                        failonerror="true"> <arg line="http://localhost:5000/wiki"/> </exec> </tasks> </configuration> 
+                        <goals> <goal>run</goal> </goals> </execution -->
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
